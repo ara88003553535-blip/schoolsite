@@ -16,16 +16,42 @@ jobs:
           node-version: '18'
 
       - name: Install dependencies (frontend)
-        working-directory: ./frontend
-        run: npm install
+        run: |
+          echo "Workspace: $GITHUB_WORKSPACE"
+          pwd
+          ls -la
+          echo "Searching for frontend package.json in the repository..."
+          # Try a few ways to find the frontend package.json
+          if [ -f "./frontend/package.json" ]; then
+            FRONT_DIR=frontend
+          else
+            FRONT_DIR=$(git ls-files | grep -m1 'frontend/package.json' || true)
+            if [ -n "$FRONT_DIR" ]; then
+              FRONT_DIR=${FRONT_DIR%/package.json}
+            fi
+          fi
 
-      - name: Build frontend
-        working-directory: ./frontend
-        run: npm run build
+          if [ -z "$FRONT_DIR" ]; then
+            echo "ERROR: Could not find frontend/package.json in the repository."
+            echo "Files at repository root:" && ls -la
+            echo "All tracked files:" && git ls-files | sed -n '1,200p'
+            exit 1
+          fi
+
+          echo "Found frontend at: $FRONT_DIR"
+          cd "$FRONT_DIR"
+          echo "Installing dependencies in $PWD"
+          npm install
+          echo "Building frontend"
+          npm run build
+          cd "$GITHUB_WORKSPACE"
+          rm -rf build_dist || true
+          mkdir -p build_dist
+          cp -r "$FRONT_DIR/dist/"* build_dist/
 
       - name: Deploy to gh-pages branch
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./frontend/dist
+          publish_dir: ./build_dist
 
