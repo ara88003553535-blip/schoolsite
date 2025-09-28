@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="lt">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Ant Design CDN demo (no Node.js)</title>
+    <!-- Ant Design v4 UMD CSS (works well for quick demos without build tools) -->
+    <link rel="stylesheet" href="https://unpkg.com/antd@4/dist/antd.min.css" />
+    <style>
+      body { padding: 24px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial; }
+      #root { max-width: 900px; margin: 0 auto; }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+
+    <!-- React and ReactDOM UMD builds -->
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <!-- Babel standalone to allow writing JSX in the browser (only for prototyping) -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <!-- Ant Design UMD (v4) -->
+    <script src="https://unpkg.com/antd@4/dist/antd.min.js"></script>
+
+    <!-- Demo app using JSX (transpiled by Babel in the browser) -->
+    <script type="text/babel">
+      const { Button, Layout, Menu, DatePicker, Input, List, Avatar } = antd;
+      const { Header, Content, Sider } = Layout;
+
+      function App() {
+        const items = [
+          { title: 'Naujienos: Mokyklos atnaujinimas', description: 'Pamokų tvarkaraštis pasikeitė nuo pirmadienio.'},
+          { title: 'Renginys: Tėvų susirinkimas', description: 'Susirinkimas vyks trečiadienį 18:00.'}
+        ];
+
+        return (
+          <Layout>
+            <Header style={{ color: '#fff' }}>Mokyklos portalo demonstracija</Header>
+            <Layout>
+              <Sider width={240} style={{ background: '#fff', padding: 12 }}>
+                <Menu defaultSelectedKeys={["1"]} mode="inline">
+                  <Menu.Item key="1">Pagrindinis</Menu.Item>
+                  <Menu.Item key="2">Naujienos</Menu.Item>
+                  <Menu.Item key="3">Tvarkaraštis</Menu.Item>
+                </Menu>
+              </Sider>
+
+              <Layout style={{ padding: '12px' }}>
+                <Content style={{ background: '#fff', padding: 16 }}>
+                  <h2>Greitas bandymas</h2>
+                  <div style={{ marginBottom: 12 }}>
+                    <DatePicker /> <Input style={{ width: 240, marginLeft: 8 }} placeholder="Paieška..." />
+                  </div>
+
+                  <Button type="primary" onClick={() => alert('Mygtukas paspaustas')}>Pagrindinis mygtukas</Button>
+
+                  <h3 style={{ marginTop: 18 }}>Naujausi pranešimai</h3>
+                  <List
+                    itemLayout="horizontal"
+                    dataSource={items}
+                    renderItem={item => (
+                      <List.Item>
+                        <List.Item.Meta
+                          avatar={<Avatar>{item.title.charAt(0)}</Avatar>}
+                          title={item.title}
+                          description={item.description}
+                        />
+                      </List.Item>
+                    )}
+                  />
+                </Content>
+              </Layout>
+            </Layout>
+          </Layout>
+        );
+      }
+
+      const root = ReactDOM.createRoot(document.getElementById('root'));
+      root.render(<App />);
+    </script>
+
+    <p style="margin-top: 18px; font-size: 0.9em; color: #666">Šis demo naudojamas be Node.js ir nėra skirtas gamybai — tai tik prototipavimo pavyzdys. Daugiau funkcijų ir geresnį kodo valdymą gausite naudodami Node.js + bundler (Vite/webpack).</p>
+  </body>
+</html>
