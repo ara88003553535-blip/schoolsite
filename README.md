@@ -64,6 +64,9 @@ If you want, I can:
 ---
 
 If you'd like, I can now create the git commands you should run to push this repo to GitHub and trigger the workflows. Which would you like me to do?
+
+Developer note:
+- Make sure `frontend/package.json` and `backend/package.json` (and their lockfiles) are committed to the repo. I added `frontend/package.json` and `backend/package.json` for the Actions runner, but you should verify versions and add `package-lock.json` files by running `npm install` locally in each folder and committing the generated lockfiles for deterministic CI builds.
 # School Portal (frontend + backend)
 
 Minimal full-stack scaffold for a school portal.
